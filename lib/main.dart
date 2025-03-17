@@ -2,6 +2,7 @@
 
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -13,21 +14,30 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => MyAppState(),
-      child: MaterialApp(
-        title: 'Namer App',
-        theme: ThemeData(
-          useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
-        ),
-        darkTheme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo, brightness: Brightness.dark),
-      ),
-      themeMode: ThemeMode.system, // Adapta-se ao tema do sistema (claro ou escuro)
-        home: MyHomePage(),
-      ),
+    return DynamicColorBuilder(
+      builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
+        return ChangeNotifierProvider(
+          create: (context) => MyAppState(),
+          child: MaterialApp(
+            title: 'Namer App',
+            theme: ThemeData(
+              useMaterial3: true,
+              colorScheme: lightDynamic ??
+                  ColorScheme.fromSeed(seedColor: Colors.indigo),
+              // colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
+            ),
+            darkTheme: ThemeData(
+              useMaterial3: true,
+              colorScheme: darkDynamic ??
+                  ColorScheme.fromSeed(
+                      seedColor: Colors.indigo, brightness: Brightness.dark),
+            ),
+            themeMode: ThemeMode
+                .system, // Adapta-se ao tema do sistema (claro ou escuro)
+            home: MyHomePage(),
+          ),
+        );
+      },
     );
   }
 }
